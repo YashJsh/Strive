@@ -1,0 +1,26 @@
+[
+    {
+        "question": "What is Strive, and how does it help teams?",
+        "answer": "Strive is a team management app designed to enhance collaboration, streamline workflows, and improve productivity by providing tools for task tracking, sprint planning, and real-time updates."
+    },
+    {
+        "question": "Can I use Strive for both small and large teams?",
+        "answer": "Yes, Strive is scalable and designed to work effectively for teams of all sizes, from small startups to large organizations."
+    },
+    {
+        "question": "Is my team's data secure on Strive?",
+        "answer": "Absolutely. Strive uses industry-standard encryption and secure protocols to ensure your team's data remains private and protected."
+    },
+    {
+        "question": "Can I customize workflows and task boards in Strive?",
+        "answer": "Yes, Strive offers customizable workflows and task boards to fit your team’s unique processes and project needs."
+    },
+    {
+        "question": "Does Strive support integrations with other tools we use?",
+        "answer": "Yes, Strive integrates with popular tools like Slack, Google Drive, and more to ensure seamless collaboration."
+    },
+    {
+        "question": "How can I invite team members to join my workspace?",
+        "answer": "You can invite team members by sharing a secure workspace invite link or unique code generated within the app."
+    }
+]

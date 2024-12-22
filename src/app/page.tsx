@@ -1,101 +1,96 @@
-import Image from "next/image";
+import Link from "next/link";
+import features from "../../features.json";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
+import Questions from "@/components/qustions";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="flex justify-center flex-col items-center mx-auto py-32">
+        <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold pb-6 tracking-tight bg-gradient-to-br from-gray-700 via-blue-100 to-gray-400 bg-clip-text text-transparent">
+          Simplify Your Workflow
+        </h1>
+        <p className="text-5xl tracking-tighter font-semibold bg-gradient-to-br from-gray-700 via-blue-100 to-gray-400 bg-clip-text text-transparent">
+          Strive: Uniting teams to reach their full potential and success
+        </p>
+        <div className="flex mt-8">
+          <Button asChild size={"lg"} className="mr-4 font-semibold">
+            <Link href="/onboarding">
+              Get Started <ChevronRight />
+            </Link>
+          </Button>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Button
+            asChild
+            size={"lg"}
+            variant="outline"
+            className="mr-4 font-semibold"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <Link href="#features">
+              Learn More <ChevronRight />
+            </Link>
+          </Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      <section id="features" className="py-10 px-10">
+        <div className="flex flex-col justify-center items-center gap-4">
+          <h2 className="text-6xl font-semibold bg-gradient-to-br from-gray-700 via-blue-100 to-gray-400 bg-clip-text text-transparent">
+            Key Features
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-3">
+            {features.map((feature, index) => (
+              <Card key={index}>
+                <CardHeader>
+                  <CardTitle className="text-2xl">{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="company" className="py-10 px-10">
+        <div className="container mx-auto ">
+          <div className="text-center">
+            <h2 className="text-6xl font-semibold bg-gradient-to-br from-gray-700 via-blue-100 to-gray-400 bg-clip-text text-transparent py-4">
+              Frequently asked questions
+            </h2>
+          </div>
+          <Questions />
+        </div>
+      </section>
+
+      <section id="start" className="py-10 px-10">
+        <div className="container mx-auto ">
+          <div className="text-center">
+            <h2 className="text-6xl font-semibold bg-gradient-to-br from-gray-700 via-blue-100 to-gray-400 bg-clip-text text-transparent py-4">
+              Ready to transfrom your workflow
+            </h2>
+            <h3 className="text-4xl font-semibold bg-gradient-to-br from-gray-500 via-blue-100 to-gray-400 bg-clip-text text-transparent mb-3">
+              Join thousands of teams already using Strive to collaborate,
+              organize, and achieve their goals seamlessly. Be part of the
+              movement driving productivity and success!
+            </h3>
+            <Button
+              asChild
+              size={"lg"}
+              className="font-semibold my-3 animate-bounce"
+            >
+              <Link href={"/onboarding"}>
+                Join for Free <ChevronRight />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
