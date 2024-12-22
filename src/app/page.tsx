@@ -70,7 +70,7 @@ export default function Home() {
 
       <section id="start" className="py-10 px-10">
         <div className="container mx-auto ">
-          <div className="text-center">
+          <div className="text-center justify-center">
             <h2 className="text-6xl font-semibold bg-gradient-to-br from-gray-700 via-blue-100 to-gray-400 bg-clip-text text-transparent py-4">
               Ready to transfrom your workflow
             </h2>

@@ -1,9 +1,13 @@
+
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import UserMenuButton from "./userMenu";
+import { checkUser } from "@/lib/checkUser";
+import { UserLoading } from "./user-loader";
 
-const Header = () => {
+const Header = async () => {
+  await checkUser();
   return (
     <header>
       <nav className="flex justify-between px-7 py-4">
@@ -26,6 +30,7 @@ const Header = () => {
           </SignedIn>
         </div>
       </nav>
+      <UserLoading/>
     </header>
   );
 };
