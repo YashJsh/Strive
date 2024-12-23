@@ -18,7 +18,7 @@ const Header = async () => {
         </Link>
         <div className="flex items-center gap-4">
           <Button className="text-base font-semibold">
-            <Link href="/create/project">Create Project</Link>
+            <Link href="/project/create">Create Project</Link>
           </Button>
           <SignedOut>
             <Button variant={"destructive"} className="text-base  font-semibold">

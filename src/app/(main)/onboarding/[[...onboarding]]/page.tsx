@@ -20,7 +20,6 @@ const Page = () => {
       <OrganizationList hidePersonal afterCreateOrganizationUrl={"/organization/:slug"}
       afterSelectOrganizationUrl={"/organization/:slug"}
      />
-      
     </div>
   )
 }
