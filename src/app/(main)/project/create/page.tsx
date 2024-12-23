@@ -35,7 +35,6 @@ const Page = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,8 +43,8 @@ const Page = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setLoading(true);
     try {
-      const response =  await createProject(data);
-      toast.message("Project Created Successfully");
+      const response = await createProject(data);
+      toast.success("Project Created Successfully");
       if (response && response.data) {
         router.push(`/project/${response.data.id}`);
       } else {
@@ -53,8 +52,8 @@ const Page = () => {
       }
     } catch (error) {
       console.log(error);
-    }finally{
-        setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,9 +82,8 @@ const Page = () => {
         <h1 className="text-6xl uppercase tracking-tighter font-semibold bg-gradient-to-br from-gray-700 via-blue-100 to-gray-400 bg-clip-text text-transparent py-4 ">
           Create new Project
         </h1>
-        <Toaster/>
+        <Toaster />
         <Card className="w-full h-full md:w-[487px] border:none shadow-xl bg-transparent border-transparent">
-
           <div className="px-7"></div>
           <CardContent className="p-7">
             <Form {...form}>
@@ -141,7 +139,9 @@ const Page = () => {
                     </FormItem>
                   )}
                 />
-                <Button disabled= {loading} className="w-full uppercase">Create</Button>
+                <Button disabled={loading} className="w-full uppercase">
+                  Create
+                </Button>
               </form>
             </Form>
           </CardContent>
