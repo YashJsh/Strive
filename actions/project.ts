@@ -1,7 +1,9 @@
 "use server"
 
 import { prisma } from "@/lib/prisma";
+import { useOrganization } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { Project, Sprint } from "@prisma/client";
 
 
 // Creating Project
@@ -107,4 +109,38 @@ export async function deleteProject(projectId : string){
   }
 
   return { status: 200, message: "Project deleted" };
+}
+export async function GetProject(projectId : string): Promise<{ status: number; message: string; data? : any} | void>{
+  const {userId, orgId} = await auth();
+  if (!userId || !orgId) {
+    return { status: 404, message: "User is unauthorized"}
+  }
+  const user = await prisma.user.findUnique({ 
+    where : {
+      clerkUserId : userId
+    }
+  })
+  if(!user){
+    return { status: 404, message: "User not found"}
+  }
+  const project = await prisma.project.findUnique({
+    where : {
+      id : projectId,
+    }, 
+    include : {
+      sprints : {
+        orderBy : { createdAt : "desc"}
+      }
+    }
+  });
+
+  if(!project){
+    return { status: 404, message: "Project not found" };
+  }
+
+  if(project.organizationId !== orgId){
+    return { status: 404, message: "Project doesn't exist with this organization"}
+  }
+
+  return {status : 200, message: "Project fetched successfully", data : project};
 }
