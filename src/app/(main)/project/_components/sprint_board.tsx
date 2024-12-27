@@ -1,10 +1,9 @@
 "use client"
 
 import { Sprint } from "@prisma/client";
-import { Divide } from "lucide-react";
 import { useState } from "react";
 import SprintManager from "./sprint-manager";
-import { sprintSchema } from "./page";
+
 
 interface SprintBoardSchema{
     sprints : Sprint[],
@@ -26,6 +25,7 @@ const SprintBoard = ({ sprints, projectId, orgId } : SprintBoardSchema) => {
         />
 
         {/* Kanban Board */}
+
     </div>
 };
 
