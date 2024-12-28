@@ -1,61 +1,72 @@
-"use server"
+"use server";
 
 import { prisma } from "@/lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
-export async function getOrganization(slug : string){
-    const { userId } = await auth();
-    
-    if(!userId){
-        return { status: 401, message: "Unauthorized" };
-    }
+export async function getOrganization(slug: string) {
+  const { userId } = await auth();
 
-    //Checking if user exist in database or not
-    const user = await prisma.user.findUnique({ 
-        where: { clerkUserId: userId },
-    })
-    if(!user){
-        return { status: 404, message: "User not found" };
-    }
+  if (!userId) {
+    return { status: 401, message: "Unauthorized" };
+  }
 
-    
-    //Getting organization details
-    const organization = (await clerkClient()).organizations.getOrganization({slug})
+  //Checking if user exist in database or not
+  const user = await prisma.user.findUnique({
+    where: { clerkUserId: userId },
+  });
+  if (!user) {
+    return { status: 404, message: "User not found" };
+  }
 
-    if(!organization){
-        return null
-    }
+  //Getting organization details
+  const organization = (await clerkClient()).organizations.getOrganization({
+    slug,
+  });
 
-    return {organization};
+  if (!organization) {
+    return null;
+  }
+
+  return { organization };
 }
 
-export async function getOrganizationUsers(orgId : string){
-    const {userId } = await auth();
-    if(!userId){
-        return { status: 404, success: false, message: "User not found" };
-    }
-    const user = await prisma.user.findUnique({
-        where: { clerkUserId: userId },
-    })
-    if(!user){
-        return { status: 404, success : false, message: "User not found" };
-    }
-    const organizationMembership = (await clerkClient()).organizations.getOrganizationMembershipList({
-        organizationId: orgId,
-    })
+export async function getOrganizationUsers(orgId: string) {
+  const { userId } = await auth();
+  if (!userId) {
+    return { status: 404, success: false, message: "User not found" };
+  }
+  const user = await prisma.user.findUnique({
+    where: { clerkUserId: userId },
+  });
+  if (!user) {
+    return { status: 404, success: false, message: "User not found" };
+  }
+  try {
+    const organizationMembership = (
+      await clerkClient()
+    ).organizations.getOrganizationMembershipList({
+      organizationId: orgId,
+    });
 
-    const userID = (await organizationMembership).data.map((membership)=>membership.publicUserData?.userId) .filter((id): id is string => id !== undefined);;
+    const userID = (await organizationMembership).data
+      .map((membership) => membership.publicUserData?.userId)
+      .filter((id): id is string => id !== undefined);
 
-    const users  = await prisma.user.findMany({
-        where: {
-            clerkUserId: {
-                in : userID
-            },
-        }
-    })
+    const users = await prisma.user.findMany({
+      where: {
+        clerkUserId: {
+          in: userID,
+        },
+      },
+    });
     return {
-        status: 200,
-        success: true,
-        data: users,
+      status: 200,
+      success: true,
+      message : 'Organization memberships',
+      data: users,
     };
-} 
+  } catch (error) {
+    console.error("Error fetching organization users:", error);
+    return { status: 500, success: false, message: "Internal server error" };
+  }
+}

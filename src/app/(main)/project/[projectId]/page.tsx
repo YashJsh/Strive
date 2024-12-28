@@ -5,9 +5,8 @@ import SprintCreationForm from "../_components/page";
 import SprintBoard from "../_components/sprint_board";
 
 const ProjectPage = async ({ params }: { params: { projectId: string } }) => {
-  const projectId = await params.projectId;
+  const {projectId} = await params;
   const project = await GetProject(projectId);
-  console.log(project);
   if (!project) {
     notFound();
   }
