@@ -8,7 +8,7 @@ import status from "../../../../../data.json";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import IssueCreationDrawer from "./createIssue";
-import { getIssuesForSprint } from "../../../../../actions/issues";
+import { getIssuesForSprint, updateIssueOrder } from "../../../../../actions/issues";
 import { BarLoader } from "react-spinners";
 import IssueCard from "@/components/issueCard";
 import { toast, Toaster } from "sonner";
@@ -29,13 +29,16 @@ const SprintBoard = ({ sprints, projectId, orgId }: SprintBoardSchema) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<IssueStatus>();
   const [loading, setLoading] = useState(false);
+  const [updateIssueLoading, setUpdateIssueLoading] = useState(false);
 
   const onDragEnd = async (result : any) => {
     if(currentSprint.status === "PLANNED"){
       toast.warning("Start the sprint to update the board");
+      return;
     }
     if(currentSprint.status === "COMPLETED"){
       toast.warning("Cannot move issues to completed sprint");
+      return;
     }
     const { destination, source } = result;
     if (!destination) return;
@@ -43,7 +46,7 @@ const SprintBoard = ({ sprints, projectId, orgId }: SprintBoardSchema) => {
     const newOrderedData = [...issues]
     const sourceList = newOrderedData.filter(
       (list) =>list.status === source.droppableId
-    );
+    );  
     const DestinationList = newOrderedData.filter(
       (list) =>list.status === destination.droppableId
     );
@@ -54,8 +57,17 @@ const SprintBoard = ({ sprints, projectId, orgId }: SprintBoardSchema) => {
         destination.index
       )
       reorderCard.forEach((card, i)=>{card.order = i;})
+    }else{
+      //remove card from the source list;
+      const [moveCard] = sourceList.splice(source.index, 1);
+      //Assign new id to the move card;
+      moveCard.status = destination.droppableId;
+      //Add card to the destination list;
+      DestinationList.splice(destination.index, 0, moveCard);  
     }
     const sortedIssues = newOrderedData.sort((a,b)=>a.order - b.order);
+    setIssues(sortedIssues);
+    updateIssueOrderfunction(sortedIssues);
   };
 
   const reorder = (list:Issue[], startIndex : number, endIndex : number)  =>{
@@ -64,6 +76,20 @@ const SprintBoard = ({ sprints, projectId, orgId }: SprintBoardSchema) => {
     result.splice(endIndex, 0, removed);
     return result;
   }
+
+  const updateIssueOrderfunction = async (issues : Issue[])=>{
+    try{
+      setUpdateIssueLoading(true);
+      const response = await updateIssueOrder(issues);
+      if(response.success){
+        toast.success("Issue order updated successfully");
+        setUpdateIssueLoading(false);
+      }
+    }catch(err){
+      console.log(err);
+    }
+  }
+
 
   const handleAddIssue = (status: IssueStatus) => {
     setSelectedStatus(status);
@@ -99,7 +125,7 @@ const SprintBoard = ({ sprints, projectId, orgId }: SprintBoardSchema) => {
         sprints={sprints}
         projectId={projectId}
       />
-      {loading && <BarLoader className="mt-4" width="full" color="white" />}
+      {(updateIssueLoading ||loading) && <BarLoader className="mt-4" width="full" color="white" />}
       {/* Kanban Board */}
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-col-1 sm:grid-cols-2 lg:grid-cols-4 mt-4 bg-black  p-4 rounded-lg">
@@ -115,6 +141,7 @@ const SprintBoard = ({ sprints, projectId, orgId }: SprintBoardSchema) => {
                         key={issue.id}
                         draggableId={issue.id}
                         index={index}
+                        isDragDisabled={updateIssueLoading}
                       >
                         {(provided) => (
                           <div

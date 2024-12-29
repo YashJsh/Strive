@@ -9,13 +9,17 @@ import {
 import { Badge } from "./ui/badge";
 import UserAvatar from "./user-Avatar";
 import { formatDistanceToNow } from "date-fns";
+import { useRouter } from "next/navigation";
+import { Issue } from "@prisma/client";
+import IssueDetailsDialog from "./Issue-detail-dialog";
 
 interface IssueCardProps {
-    issue: any;//type Issue
-    showStatus?: boolean;
-    onDelete?: () => void;
-    onUpdate?: () => void;
-  }
+  issue: any;
+  showStatus?: boolean;
+  onDelete?: (params?: any) => void;
+  onUpdate?: (params?: any) => void;
+}
+
   
                     //type issue
 const priorityColor : any = {
@@ -33,10 +37,22 @@ const IssueCard = ({
 
     const [isDialogue, setDialogue] = useState(false);
     const created = formatDistanceToNow(new Date(issue.createdAt));
+    const router = useRouter(); 
+
+    const onDeleteHandler = (...params : any) => {
+      router.refresh();
+      onDelete(...params);
+    };
+    
+    const onUpdateHandler = (...params : any) => {
+      router.refresh();
+      onUpdate(...params);
+    };
+    
 
   return (
     <div className="mt-2">
-      <Card className="flex flex-col hover:shadow-white hover:shadow transition-shadow">
+      <Card className="flex flex-col hover:shadow-white hover:shadow transition-shadow" onClick={()=>{setDialogue(true)}}>
         <CardHeader className={`border-t-2 ${priorityColor[issue.priority]} rounded-lg`}>
           <CardTitle>{issue.title}</CardTitle>
         </CardHeader>
@@ -49,7 +65,11 @@ const IssueCard = ({
           <p className="font-medium">{created}</p></div>
         </CardFooter>
       </Card>
-      {isDialogue && <></>}
+      {isDialogue && 
+        <IssueDetailsDialog isOpen = {isDialogue} onClose = {()=>{setDialogue(false)}} issue = {issue} onDelete = {onDelete} onUpdate={onUpdateHandler}
+        borderColor = {priorityColor[issue.priority]}
+        />  
+      }
     </div>
   );
 };
