@@ -95,7 +95,7 @@ const IssueCreationDrawer = ({
         form.reset();
         toast.success("Issue created successfully")
     } catch (error) {
-        
+        toast.error("Error on creating issue")
     } finally{
         setSubmitting(false);
     }

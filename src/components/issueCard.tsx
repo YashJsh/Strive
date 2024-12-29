@@ -10,7 +10,6 @@ import { Badge } from "./ui/badge";
 import UserAvatar from "./user-Avatar";
 import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/navigation";
-import { Issue } from "@prisma/client";
 import IssueDetailsDialog from "./Issue-detail-dialog";
 
 interface IssueCardProps {
@@ -20,7 +19,6 @@ interface IssueCardProps {
   onUpdate?: (params?: any) => void;
 }
 
-  
                     //type issue
 const priorityColor : any = {
   LOW: "border-green-500",
@@ -66,7 +64,7 @@ const IssueCard = ({
         </CardFooter>
       </Card>
       {isDialogue && 
-        <IssueDetailsDialog isOpen = {isDialogue} onClose = {()=>{setDialogue(false)}} issue = {issue} onDelete = {onDelete} onUpdate={onUpdateHandler}
+        <IssueDetailsDialog isOpen = {isDialogue} onClose = {()=>{setDialogue(false)}} issue = {issue} onDelete = {onDeleteHandler} onUpdate={onUpdateHandler}
         borderColor = {priorityColor[issue.priority]}
         />  
       }
