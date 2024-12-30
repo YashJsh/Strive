@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { deleteIssue, updateIssue } from "../../actions/issues";
@@ -58,16 +58,12 @@ const IssueDetailsDialog: React.FC<IssueDetailsDialogProps> = ({
   const [updateLoading, setUpdateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-//   const [deleteResponse, setDeleteResponse ] = useState<any>();
-//   const [updateResponse, setUpdateResponse] = useState();
-
   const deleteIssues = async (IssueId : string) => {
     try {
       if (window.confirm("Are you sure you want to delete this issue?")) {
         setDeleteLoading(true);
         const response = await deleteIssue(IssueId);
         if (response.success && response.status == 200) {
-          
           router.refresh();
           onClose()
           toast.success("Issue deleted successfully");
@@ -80,11 +76,15 @@ const IssueDetailsDialog: React.FC<IssueDetailsDialogProps> = ({
     }
   };
 
-  const updateIssues = async (IssueId : string, Issue : any) => {
+  const updateIssues = async (IssueId : string, {priority , status} : any) => {
     try {
       setUpdateLoading(true);
-      const response = await updateIssue(IssueId, Issue);
+      const response = await updateIssue(IssueId, {priority, status});
       if (response.success && response.status == 200) {
+        setStatus(response.data?.status);
+        setPriority(response.data?.priority);
+        router.refresh();
+        onClose()
         toast.success("Issue updated successfully");
       }
     } catch (error) {
@@ -93,32 +93,29 @@ const IssueDetailsDialog: React.FC<IssueDetailsDialogProps> = ({
       setUpdateLoading(false);
     }
   };
+
   const canChange =
     user?.id === issue.reporter.clerkUserId || membership?.role === "org:admin";
 
   const handleStatusChange = async (newStatus: string) => {
+    console.log("New Status is : ", newStatus);
     setStatus(newStatus);
-    updateIssues(issue.id, issue);
+    await updateIssues(issue.id, { priority: issue.priority, status: newStatus });
+   
   };
-
   const handlePriorityChange = async (newPriority: string) => {
-    setPriority(newPriority);
-    updateIssues(issue.id, issue);
+    console.log("New Priority is : ", newPriority);
+    setPriority(newPriority); // Update the state for UI consistency
+    console.log("Consoling before update : ", issue.priority);
+  
+    // Pass the new values explicitly
+    await updateIssues(issue.id, { priority: newPriority, status: issue.status });
+    console.log("AFter update priority is : ", newPriority);
   };
 
   const handleGoToProject = () => {
-    router.push(`/dashboard/project/${issue.projectId}/`);
+    router.push(`/dashboard/project/${issue.projectId}?sprint=${issue.sprintId}/`);
   };
-
-//   useEffect(() => {
-//     if (deleteResponse) {
-//       onClose();
-//       onDelete();
-//     }
-//     if (updateResponse) {
-//       onUpdate(updateResponse);
-//     }
-//   }, [deleteResponse, updateResponse, deleteLoading, updateLoading]);
 
   return (
     <div className="flex flex-col items-center text-center justify-center">

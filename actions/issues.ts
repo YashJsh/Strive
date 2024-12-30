@@ -124,13 +124,15 @@ export async function deleteIssue(issueId : string) {
     return { status : 200, success : "true", message :"Issue Deleted Successfully"};
   }
   
-  export async function updateIssue(issueId : string, data : Issue) {
+  export async function updateIssue(issueId : string, data : any) {
     const { userId, orgId } = await auth();
   
     if (!userId || !orgId) {
         return {status : 403, success : "false" , message : "Access denied"};
     }
-  
+    console.log(data);
+    console.log(data.status);
+    console.log(data.priority);
     try {
       const issue = await prisma.issue.findUnique({
         where: { id: issueId },
