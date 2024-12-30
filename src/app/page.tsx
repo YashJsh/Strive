@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="flex justify-center flex-col items-center mx-auto py-32">
+      <section className="flex justify-center flex-col items-center  text-center mx-auto py-32">
         <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold pb-6 tracking-tight bg-gradient-to-br from-gray-700 via-blue-100 to-gray-400 bg-clip-text text-transparent">
           Simplify Your Workflow
         </h1>

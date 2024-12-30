@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server"
 import { sprintSchema } from "@/app/(main)/project/_components/page";
 import { prisma } from "@/lib/prisma";
+import { SprintStatus } from "@prisma/client";
 
 type SprintData = typeof sprintSchema._type;
 
@@ -35,7 +36,7 @@ export async function createSprint({projectId, data} : {projectId: string, data:
 }
 
 
-export async function updateSprintStatus(sprintId : string, newStatus : any){
+export async function updateSprintStatus(sprintId : string, newStatus : SprintStatus){
     const { userId , orgId, orgRole } = await auth();
     if(!userId || !orgId){
         return { success: false, message:"User is unauthenticated"}
